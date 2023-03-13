@@ -101,7 +101,7 @@ func (r *webhookResource) Create(ctx context.Context, req resource.CreateRequest
 		EventResource: plan.EventResource.ValueString(),
 	}
 
-	id, err := r.client.AddWebhook(webhook)
+	id, err := r.client.Webhooks.Add(webhook)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error creating webhook",
@@ -130,7 +130,7 @@ func (r *webhookResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	webhook, err := r.client.GetWebhook(state.Id.ValueString())
+	webhook, err := r.client.Webhooks.Get(state.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error Reading webhook",
@@ -177,7 +177,7 @@ func (r *webhookResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 
 	// Update existing webhook
-	_, err := r.client.UpdateWebhook(plan.Id.ValueString(), webhook)
+	_, err := r.client.Webhooks.Update(plan.Id.ValueString(), webhook)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error Updating Webhook",
@@ -186,7 +186,7 @@ func (r *webhookResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
-	updatedWebhook, err := r.client.GetWebhook(plan.Id.ValueString())
+	updatedWebhook, err := r.client.Webhooks.Get(plan.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error Reading Webhook",
@@ -227,7 +227,7 @@ func (r *webhookResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	err := r.client.DeleteWebhook(state.Id.ValueString())
+	err := r.client.Webhooks.Delete(state.Id.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error Deleting Webhook",
