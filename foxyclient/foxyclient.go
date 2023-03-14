@@ -10,6 +10,8 @@ type Foxy struct {
 	Webhooks          WebhooksApi
 	CartTemplates     CartTemplatesApi
 	CheckoutTemplates CheckoutTemplatesApi
+	ReceiptTemplates  ReceiptTemplatesApi
+	EmailTemplates    EmailTemplatesApi
 }
 
 func New(baseUrl string, clientId string, clientSecret string, refreshToken string) (Foxy, error) {
@@ -25,6 +27,8 @@ func New(baseUrl string, clientId string, clientSecret string, refreshToken stri
 		Webhooks:          WebhooksApi{apiClient: &apiClient},
 		CartTemplates:     CartTemplatesApi{apiClient: &apiClient},
 		CheckoutTemplates: CheckoutTemplatesApi{apiClient: &apiClient},
+		ReceiptTemplates:  ReceiptTemplatesApi{apiClient: &apiClient},
+		EmailTemplates:    EmailTemplatesApi{apiClient: &apiClient},
 	}
 	return foxy, nil
 }

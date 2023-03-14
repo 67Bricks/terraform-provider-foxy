@@ -29,3 +29,10 @@ resource "foxy_checkout_template" "default" {
   description      = "Checkout Template"
   content          = "<p>New checkout template</p>"
 }
+
+resource "foxy_email_template" "default" {
+  description  = "Email ReceiptTemplate"
+  subject      = "{{ store_name }} Order ({{ order_id }})"
+  content_html = "<p>New email template</p>"
+  content_text = "New email template"
+}
