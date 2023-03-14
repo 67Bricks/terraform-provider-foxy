@@ -193,6 +193,7 @@ func (p *foxyProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewWebhookResource,
 		NewCartTemplateResource,
+		NewCartIncludeTemplateResource,
 		NewCheckoutTemplateResource,
 		NewReceiptTemplateResource,
 		NewEmailTemplateResource,

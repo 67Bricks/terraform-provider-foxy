@@ -6,12 +6,13 @@ import (
 )
 
 type Foxy struct {
-	StoreInfo         StoreInfoApi
-	Webhooks          WebhooksApi
-	CartTemplates     CartTemplatesApi
-	CheckoutTemplates CheckoutTemplatesApi
-	ReceiptTemplates  ReceiptTemplatesApi
-	EmailTemplates    EmailTemplatesApi
+	StoreInfo            StoreInfoApi
+	Webhooks             WebhooksApi
+	CartTemplates        CartTemplatesApi
+	CartIncludeTemplates CartIncludeTemplatesApi
+	CheckoutTemplates    CheckoutTemplatesApi
+	ReceiptTemplates     ReceiptTemplatesApi
+	EmailTemplates       EmailTemplatesApi
 }
 
 func New(baseUrl string, clientId string, clientSecret string, refreshToken string) (Foxy, error) {
@@ -23,12 +24,13 @@ func New(baseUrl string, clientId string, clientSecret string, refreshToken stri
 		return Foxy{}, err
 	}
 	foxy := Foxy{
-		StoreInfo:         StoreInfoApi{apiClient: &apiClient},
-		Webhooks:          WebhooksApi{apiClient: &apiClient},
-		CartTemplates:     CartTemplatesApi{apiClient: &apiClient},
-		CheckoutTemplates: CheckoutTemplatesApi{apiClient: &apiClient},
-		ReceiptTemplates:  ReceiptTemplatesApi{apiClient: &apiClient},
-		EmailTemplates:    EmailTemplatesApi{apiClient: &apiClient},
+		StoreInfo:            StoreInfoApi{apiClient: &apiClient},
+		Webhooks:             WebhooksApi{apiClient: &apiClient},
+		CartTemplates:        CartTemplatesApi{apiClient: &apiClient},
+		CartIncludeTemplates: CartIncludeTemplatesApi{apiClient: &apiClient},
+		CheckoutTemplates:    CheckoutTemplatesApi{apiClient: &apiClient},
+		ReceiptTemplates:     ReceiptTemplatesApi{apiClient: &apiClient},
+		EmailTemplates:       EmailTemplatesApi{apiClient: &apiClient},
 	}
 	return foxy, nil
 }
