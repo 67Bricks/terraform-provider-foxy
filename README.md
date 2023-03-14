@@ -27,6 +27,11 @@ are already present in the config.
 ## Current status
 
 * Managing webhooks broadly seems to work
+* Managing cart templates and checkout templates works - but while the Foxy API supports multiple
+  cart and checkout templates, Foxy itself only uses one. So you need to:
+  * Create a placeholder resource in your TF file for a cart_template (e.g. called `default`)
+  * Find the ID of the existing cart_template via the Foxy API
+  * `terraform import foxy_cart_template.default [the id]`
 
 ## MIT License
 

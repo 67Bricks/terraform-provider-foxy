@@ -2,6 +2,7 @@ package foxyprovider
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -12,8 +13,9 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ resource.Resource              = &cartTemplateResource{}
-	_ resource.ResourceWithConfigure = &cartTemplateResource{}
+	_ resource.Resource                = &cartTemplateResource{}
+	_ resource.ResourceWithConfigure   = &cartTemplateResource{}
+	_ resource.ResourceWithImportState = &cartTemplateResource{}
 )
 
 // NewCartTemplateResource is a helper function to simplify the provider implementation.
@@ -57,11 +59,11 @@ func (r *cartTemplateResource) Schema(_ context.Context, _ resource.SchemaReques
 			},
 			"content": schema.StringAttribute{
 				Description: "HTML content of the template.",
-				Required:    true,
+				Optional:    true,
 			},
 			"content_url": schema.StringAttribute{
 				Description: "Public URL from which the content can be retrieved",
-				Required:    true,
+				Optional:    true,
 			},
 		},
 	}
@@ -201,6 +203,11 @@ func (r *cartTemplateResource) Delete(ctx context.Context, req resource.DeleteRe
 		)
 		return
 	}
+}
+
+func (r *cartTemplateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Retrieve import ID and save to id attribute
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
 type cartTemplateModel struct {

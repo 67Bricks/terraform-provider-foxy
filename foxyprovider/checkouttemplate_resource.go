@@ -2,6 +2,7 @@ package foxyprovider
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -12,8 +13,9 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ resource.Resource              = &checkoutTemplateResource{}
-	_ resource.ResourceWithConfigure = &checkoutTemplateResource{}
+	_ resource.Resource                = &checkoutTemplateResource{}
+	_ resource.ResourceWithConfigure   = &checkoutTemplateResource{}
+	_ resource.ResourceWithImportState = &checkoutTemplateResource{}
 )
 
 // NewCheckoutTemplateResource is a helper function to simplify the provider implementation.
@@ -57,11 +59,11 @@ func (r *checkoutTemplateResource) Schema(_ context.Context, _ resource.SchemaRe
 			},
 			"content": schema.StringAttribute{
 				Description: "HTML content of the template.",
-				Required:    true,
+				Optional:    true,
 			},
 			"content_url": schema.StringAttribute{
 				Description: "Public URL from which the content can be retrieved",
-				Required:    true,
+				Optional:    true,
 			},
 		},
 	}
@@ -201,6 +203,11 @@ func (r *checkoutTemplateResource) Delete(ctx context.Context, req resource.Dele
 		)
 		return
 	}
+}
+
+func (r *checkoutTemplateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Retrieve import ID and save to id attribute
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }
 
 type checkoutTemplateModel struct {

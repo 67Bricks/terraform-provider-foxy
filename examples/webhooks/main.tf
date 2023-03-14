@@ -20,14 +20,12 @@ resource "foxy_webhook" "example" {
   event_resource = "transaction"
 }
 
-resource "foxy_cart_template" "example" {
-  description      = "https://example.com/new"
-  content          = "<p>New cart template</p>"
-  content_url      = ""
+resource "foxy_cart_template" "default" {
+  description      = "This is the default Cart template"
+  content          = "<p>New improved cart template</p>"
 }
 
-resource "foxy_checkout_template" "example" {
-  description      = "https://example.com/new"
+resource "foxy_checkout_template" "default" {
+  description      = "Checkout Template"
   content          = "<p>New checkout template</p>"
-  content_url      = ""
 }
