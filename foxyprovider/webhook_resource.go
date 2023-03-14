@@ -210,14 +210,6 @@ func (r *webhookResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 }
 
-// @todo Perhaps we could avoid this by changing the JSON serialization in the client to remove omitempty?
-func nullableString(s string) types.String {
-	if s == "" {
-		return types.StringNull()
-	}
-	return types.StringValue(s)
-}
-
 // Delete deletes the resource and removes the Terraform state on success.
 func (r *webhookResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state webhookModel

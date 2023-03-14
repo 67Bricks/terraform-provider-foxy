@@ -192,6 +192,8 @@ func (p *foxyProvider) DataSources(_ context.Context) []func() datasource.DataSo
 func (p *foxyProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewWebhookResource,
+		NewCartTemplateResource,
+		NewCheckoutTemplateResource,
 	}
 }
 
@@ -202,4 +204,12 @@ type foxyProviderModel struct {
 	ClientId     types.String `tfsdk:"client_id"`
 	ClientSecret types.String `tfsdk:"client_secret"`
 	RefreshToken types.String `tfsdk:"refresh_token"`
+}
+
+// @todo Perhaps we could avoid this by changing the JSON serialization in the client to remove omitempty?
+func nullableString(s string) types.String {
+	if s == "" {
+		return types.StringNull()
+	}
+	return types.StringValue(s)
 }

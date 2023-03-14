@@ -6,8 +6,10 @@ import (
 )
 
 type Foxy struct {
-	StoreInfo StoreInfoApi
-	Webhooks  WebhooksApi
+	StoreInfo         StoreInfoApi
+	Webhooks          WebhooksApi
+	CartTemplates     CartTemplatesApi
+	CheckoutTemplates CheckoutTemplatesApi
 }
 
 func New(baseUrl string, clientId string, clientSecret string, refreshToken string) (Foxy, error) {
@@ -19,8 +21,10 @@ func New(baseUrl string, clientId string, clientSecret string, refreshToken stri
 		return Foxy{}, err
 	}
 	foxy := Foxy{
-		StoreInfo: StoreInfoApi{apiClient: &apiClient},
-		Webhooks:  WebhooksApi{apiClient: &apiClient},
+		StoreInfo:         StoreInfoApi{apiClient: &apiClient},
+		Webhooks:          WebhooksApi{apiClient: &apiClient},
+		CartTemplates:     CartTemplatesApi{apiClient: &apiClient},
+		CheckoutTemplates: CheckoutTemplatesApi{apiClient: &apiClient},
 	}
 	return foxy, nil
 }
