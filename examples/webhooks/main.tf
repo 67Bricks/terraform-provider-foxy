@@ -43,32 +43,9 @@ resource "foxy_store_info" "default" {
   store_url = "http://www.example.com/"
   store_email = "test@example.com"
   locale_code = "en_US"
-  region = ""
+  region = "Somewhere"
   language = "german"
   postal_code = "99999"
   country = "GB"
-
-  require_signed_shipping_rates = true
-  products_require_expires_property = false
-  is_maintenance_mode = false
-  is_active = false
-  hide_decimal_characters = false
-  hide_currency_symbol = false
-  features_multiship = false
-  customer_password_hash_type = "phpass"
-  customer_password_hash_config = "8"
-  checkout_type = "default_account"
-  bcc_on_receipt_email = true
-  app_session_time = 604800
-
-  shipping_address_type = "residential"
-  timezone = "America/Los_Angeles"
   webhook_key = "pyt3lDjdEx8Nl1HlL5AavPcxEBbVm8Ptn6hZGTZRdAHijStkUTNc5IawT1De"
-
-  use_webhook = false
-  use_single_sign_on = false
-  use_email_dns = false
-  use_cart_validation = false
-  use_international_currency_symbol = false
-  use_remote_domain = false
 }

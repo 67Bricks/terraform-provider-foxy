@@ -62,6 +62,10 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"use_remote_domain": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"store_url": schema.StringAttribute{
 				Required: true,
@@ -77,9 +81,17 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"use_email_dns": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"bcc_on_receipt_email": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(true),
+				},
+				Computed: true,
 			},
 			"smtp_config": schema.StringAttribute{
 				Optional: true,
@@ -98,15 +110,31 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"timezone": schema.StringAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringDefault("America/Los_Angeles"),
+				},
+				Computed: true,
 			},
 			"hide_currency_symbol": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"hide_decimal_characters": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"use_international_currency_symbol": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"language": schema.StringAttribute{
 				Optional: true,
@@ -116,9 +144,17 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"checkout_type": schema.StringAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringDefault("default_account"),
+				},
+				Computed: true,
 			},
 			"use_webhook": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"webhook_url": schema.StringAttribute{
 				Optional: true,
@@ -128,33 +164,69 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			},
 			"use_cart_validation": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"use_single_sign_on": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"single_sign_on_url": schema.StringAttribute{
 				Optional: true,
 			},
 			"customer_password_hash_type": schema.StringAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringDefault("phpass"),
+				},
+				Computed: true,
 			},
 			"customer_password_hash_config": schema.StringAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringDefault("8"),
+				},
+				Computed: true,
 			},
 			"features_multiship": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"products_require_expires_property": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"app_session_time": schema.Int64Attribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64Default(604800),
+				},
+				Computed: true,
 			},
 			"shipping_address_type": schema.StringAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringDefault("residential"),
+				},
+				Computed: true,
 			},
 			"require_signed_shipping_rates": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(true),
+				},
+				Computed: true,
 			},
 			"unified_order_entry_password": schema.StringAttribute{
 				Optional: true,
@@ -164,9 +236,17 @@ func (r *storeInfoResource) Schema(_ context.Context, _ resource.SchemaRequest, 
 			//},
 			"is_maintenance_mode": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			"is_active": schema.BoolAttribute{
 				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					boolDefault(false),
+				},
+				Computed: true,
 			},
 			//"first_payment_date": schema.StringAttribute{
 			//	Optional:    true,
