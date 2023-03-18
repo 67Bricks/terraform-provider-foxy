@@ -31,8 +31,20 @@ resource "foxy_checkout_template" "default" {
 }
 
 resource "foxy_email_template" "default" {
-  description  = "Email ReceiptTemplate"
+  description  = "Email Receipt Template"
   subject      = "{{ store_name }} Order ({{ order_id }})"
   content_html = "<p>New email template</p>"
   content_text = "New email template"
+}
+
+resource "foxy_store_info" "default" {
+  store_name = "Terraform Test"
+  store_domain = "terraformtest"
+  store_url = "http://www.example.com/"
+  store_email = "test@example.com"
+  locale_code = "en_US"
+  region = ""
+  language = "german"
+  postal_code = "99999"
+  country = "GB"
 }

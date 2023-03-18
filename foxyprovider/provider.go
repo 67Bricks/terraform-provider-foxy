@@ -197,6 +197,7 @@ func (p *foxyProvider) Resources(_ context.Context) []func() resource.Resource {
 		NewCheckoutTemplateResource,
 		NewReceiptTemplateResource,
 		NewEmailTemplateResource,
+		NewStoreInfoResource,
 	}
 }
 
