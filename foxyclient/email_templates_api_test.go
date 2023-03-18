@@ -1,17 +1,17 @@
 package foxyclient
 
 import (
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestRetrieveEmailTemplates(t *testing.T) {
 	foxy := newFoxy()
 	emailTemplates, _ := foxy.EmailTemplates.List()
-	assert.Equal(t, "Email Receipt Template", emailTemplates[0].Description)
-	assert.Equal(t, "", emailTemplates[0].ContentHtml)
-	assert.Equal(t, "", emailTemplates[0].ContentHtmlUrl)
-	assert.NotEmpty(t, emailTemplates[0].Id)
+	require.Equal(t, "Email Receipt Template", emailTemplates[0].Description)
+	require.Equal(t, "", emailTemplates[0].ContentHtml)
+	require.Equal(t, "", emailTemplates[0].ContentHtmlUrl)
+	require.NotEmpty(t, emailTemplates[0].Id)
 }
 
 func TestAddAndDeleteEmailTemplate(t *testing.T) {
@@ -28,20 +28,20 @@ func TestAddAndDeleteEmailTemplate(t *testing.T) {
 	initialCount := len(emailTemplates)
 
 	id, err := foxy.EmailTemplates.Add(newEmailTemplate)
-	assert.Nil(t, err, "Error from adding should have been nil")
-	assert.NotEmpty(t, id, "ID should not be empty")
+	require.Nil(t, err, "Error from adding should have been nil")
+	require.NotEmpty(t, id, "ID should not be empty")
 	createdEmailTemplate, _ := foxy.EmailTemplates.Get(id)
-	assert.Equal(t, newEmailTemplate.Description, createdEmailTemplate.Description)
+	require.Equal(t, newEmailTemplate.Description, createdEmailTemplate.Description)
 
 	emailTemplates, _ = foxy.EmailTemplates.List()
 	newCount := len(emailTemplates)
 
-	assert.Equal(t, newCount, initialCount+1)
+	require.Equal(t, newCount, initialCount+1)
 	err = foxy.EmailTemplates.Delete(id)
-	assert.Nil(t, err, "Error from deleting should have been nil")
+	require.Nil(t, err, "Error from deleting should have been nil")
 	emailTemplates, _ = foxy.EmailTemplates.List()
 	finalCount := len(emailTemplates)
-	assert.Equal(t, finalCount, initialCount)
+	require.Equal(t, finalCount, initialCount)
 }
 
 func TestAddUpdateAndDeleteEmailTemplate(t *testing.T) {
@@ -54,13 +54,13 @@ func TestAddUpdateAndDeleteEmailTemplate(t *testing.T) {
 		ContentTextUrl: "",
 	}
 	id, err := foxy.EmailTemplates.Add(newEmailTemplate)
-	assert.Nil(t, err, "Error from adding should have been nil")
+	require.Nil(t, err, "Error from adding should have been nil")
 	newEmailTemplate.Description = "Updated description"
 	_, err = foxy.EmailTemplates.Update(id, newEmailTemplate)
-	assert.Nil(t, err, "Error from updating should have been nil")
+	require.Nil(t, err, "Error from updating should have been nil")
 	createdEmailTemplate, _ := foxy.EmailTemplates.Get(id)
-	assert.Equal(t, "Updated description", createdEmailTemplate.Description)
+	require.Equal(t, "Updated description", createdEmailTemplate.Description)
 
 	err = foxy.EmailTemplates.Delete(id)
-	assert.Nil(t, err, "Error from deleting should have been nil")
+	require.Nil(t, err, "Error from deleting should have been nil")
 }

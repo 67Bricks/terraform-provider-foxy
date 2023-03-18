@@ -2,14 +2,14 @@ package foxyclient
 
 import (
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
 func TestRetrieveStoreInfo(t *testing.T) {
 	foxy := newFoxy()
 	storeInfo, _ := foxy.StoreInfo.Get()
-	assert.Equal(t, "Terraform Test", storeInfo.StoreName)
+	require.Equal(t, "Terraform Test", storeInfo.StoreName)
 }
 
 func TestSetStoreInfo(t *testing.T) {
@@ -17,15 +17,15 @@ func TestSetStoreInfo(t *testing.T) {
 
 	_, _ = foxy.StoreInfo.Update(StoreInfo{Language: "english"})
 	initialStoreInfo, _ := foxy.StoreInfo.Get()
-	assert.Equal(t, "english", initialStoreInfo.Language)
+	require.Equal(t, "english", initialStoreInfo.Language)
 
 	_, _ = foxy.StoreInfo.Update(StoreInfo{Language: "german"})
 	updatedStoreInfo, _ := foxy.StoreInfo.Get()
-	assert.Equal(t, "german", updatedStoreInfo.Language)
+	require.Equal(t, "german", updatedStoreInfo.Language)
 }
 
 func TestConvertingStoreInfoToJson(t *testing.T) {
 	storeInfo := StoreInfo{StoreName: "fish store"}
 	bytes, _ := json.Marshal(storeInfo)
-	assert.Equal(t, `{"store_name":"fish store"}`, string(bytes))
+	require.Equal(t, `{"store_name":"fish store"}`, string(bytes))
 }
