@@ -9,7 +9,7 @@ func TestRetrieveCheckoutTemplates(t *testing.T) {
 	foxy := newFoxy()
 	checkoutTemplates, _ := foxy.CheckoutTemplates.List()
 	require.Equal(t, "Checkout Template", checkoutTemplates[0].Description)
-	require.Equal(t, "", checkoutTemplates[0].Content)
+	require.Equal(t, "<p>New checkout template</p>", checkoutTemplates[0].Content)
 	require.Equal(t, "", checkoutTemplates[0].ContentUrl)
 	require.NotEmpty(t, checkoutTemplates[0].Id)
 }

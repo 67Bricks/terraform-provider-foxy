@@ -8,8 +8,8 @@ import (
 func TestRetrieveCartTemplates(t *testing.T) {
 	foxy := newFoxy()
 	cartTemplates, _ := foxy.CartTemplates.List()
-	require.Equal(t, "Cart Template", cartTemplates[0].Description)
-	require.Equal(t, "", cartTemplates[0].Content)
+	require.Equal(t, "This is the default Cart template", cartTemplates[0].Description)
+	require.Equal(t, "<p>New improved cart template</p>", cartTemplates[0].Content)
 	require.Equal(t, "", cartTemplates[0].ContentUrl)
 	require.NotEmpty(t, cartTemplates[0].Id)
 }
