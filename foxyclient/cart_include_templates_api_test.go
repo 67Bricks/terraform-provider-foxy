@@ -7,7 +7,9 @@ import (
 
 func TestRetrieveCartIncludeTemplates(t *testing.T) {
 	foxy := newFoxy()
-	cartIncludeTemplates, _ := foxy.CartIncludeTemplates.List()
+	cartIncludeTemplates, err := foxy.CartIncludeTemplates.List()
+	require.Nil(t, err, "Error from listing should have been nil")
+
 	require.Equal(t, "Cart Include Template", cartIncludeTemplates[0].Description)
 	require.Equal(t, "", cartIncludeTemplates[0].Content)
 	require.Equal(t, "", cartIncludeTemplates[0].ContentUrl)
