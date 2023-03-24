@@ -1,87 +1,55 @@
 package foxyclient
 
-import (
-	"encoding/json"
-	"github.com/tidwall/gjson"
+var (
+	_ record   = &CheckoutTemplate{}
+	_ foxyCrud = &CheckoutTemplatesApi{}
 )
+
+// ----
 
 type CheckoutTemplatesApi struct {
 	apiClient FoxyClient
 }
 
-func (foxy *CheckoutTemplatesApi) List() ([]CheckoutTemplate, error) {
-	// This is not retrieving all checkoutTemplates - only the first 300 - but is it plausible to have more than 300 checkoutTemplates?
-	path := foxy.storePath() + "/checkout_templates?limit=300"
-	body, err := foxy.apiClient.get(path)
-	if err != nil {
-		return nil, err
-	}
-	var checkoutTemplates []CheckoutTemplate
-	embeddedJsonResult := gjson.GetBytes(body, "_embedded.fx:checkout_templates")
-	embeddedJson := []byte(embeddedJsonResult.Raw)
-	err = json.Unmarshal(embeddedJson, &checkoutTemplates)
-	if err != nil {
-		return nil, err
-	}
-	for i := range checkoutTemplates {
-		// Need to modify checkoutTemplates[i], rather than accessing wh directly via the loop, because the latter is by value
-		checkoutTemplates[i].setIdFromSelfUrl()
-	}
+func (foxy *CheckoutTemplatesApi) GetApiClient() FoxyClient {
+	return foxy.apiClient
+}
 
-	return checkoutTemplates, err
+func (foxy *CheckoutTemplatesApi) List() ([]CheckoutTemplate, error) {
+	path := foxy.storePath() + "/checkout_templates?limit=300"
+	result, e := DoList[*CheckoutTemplate](foxy, path)
+	return dereference(result), e
 }
 
 func (foxy *CheckoutTemplatesApi) Get(id string) (CheckoutTemplate, error) {
-	path := foxy.checkoutTemplatePath(id)
-	body, err := foxy.apiClient.get(path)
-	if err != nil {
-		return CheckoutTemplate{}, err
-	}
-	var checkoutTemplate CheckoutTemplate
-	err = json.Unmarshal(body, &checkoutTemplate)
-	if err != nil {
-		return CheckoutTemplate{}, err
-	}
-	checkoutTemplate.setIdFromSelfUrl()
-	return checkoutTemplate, err
+	path := "/checkout_templates/" + id
+	result, e := DoGet[*CheckoutTemplate](foxy, path)
+	return *result, e
 }
 
 func (foxy *CheckoutTemplatesApi) Add(checkoutTemplate CheckoutTemplate) (string, error) {
 	path := foxy.storePath() + "/checkout_templates"
-	updateJson, _ := json.Marshal(checkoutTemplate)
-	result, err := foxy.apiClient.post(path, string(updateJson))
-	if err != nil {
-		return "", err
-	}
-	selfUrl := gjson.GetBytes(result, "_links.self.href").String()
-	id := extractId(selfUrl)
-	return id, err
+	result, e := DoAdd[*CheckoutTemplate](foxy, &checkoutTemplate, path)
+	return result, e
 }
 
 func (foxy *CheckoutTemplatesApi) Update(id string, checkoutTemplate CheckoutTemplate) (string, error) {
-	path := foxy.checkoutTemplatePath(id)
-	amendedCheckoutTemplate := checkoutTemplate
-	updateJson, _ := json.Marshal(amendedCheckoutTemplate)
-	result, e := foxy.apiClient.patch(path, string(updateJson))
-	selfUrl := gjson.GetBytes(result, "_links.self.href").String()
-	updatedId := extractId(selfUrl)
-	return updatedId, e
+	path := "/checkout_templates/" + id
+	result, e := DoUpdate[*CheckoutTemplate](foxy, &checkoutTemplate, path)
+	return result, e
 }
 
 func (foxy *CheckoutTemplatesApi) Delete(id string) error {
-	path := foxy.checkoutTemplatePath(id)
-	_, e := foxy.apiClient.delete(path)
-	return e
-}
-
-func (foxy *CheckoutTemplatesApi) checkoutTemplatePath(id string) string {
-	return "/checkout_templates/" + id
+	path := "/checkout_templates/" + id
+	return DoDelete[*CheckoutTemplate](foxy, path)
 }
 
 func (foxy *CheckoutTemplatesApi) storePath() string {
 	storeId, _ := foxy.apiClient.retrieveStoreId()
 	return "/stores/" + storeId
 }
+
+// ----
 
 type CheckoutTemplate struct {
 	Id          string `json:"-"`
