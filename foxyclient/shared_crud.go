@@ -6,9 +6,6 @@ import (
 )
 
 type foxyCrud interface {
-	GetListPath() string
-	GetRecordPath(id string) string
-	GetRecordAddPath() string
 	GetApiClient() FoxyClient
 }
 
@@ -16,15 +13,13 @@ type record interface {
 	setIdFromSelfUrl()
 }
 
-func DoList[T record](crud foxyCrud) ([]T, error) {
-	// This is not retrieving all records - only the first 300 - but is it plausible to have more than 300 records?
-	path := crud.GetListPath()
+func DoList[T record](crud foxyCrud, path string) ([]T, error) {
 	body, err := crud.GetApiClient().get(path)
 	if err != nil {
 		return nil, err
 	}
 	var records []T
-	embeddedJsonResult := gjson.GetBytes(body, "_embedded.fx:cart_templates")
+	embeddedJsonResult := gjson.GetBytes(body, "_embedded.fx:*")
 	embeddedJson := []byte(embeddedJsonResult.Raw)
 	err = json.Unmarshal(embeddedJson, &records)
 	if err != nil {
@@ -38,8 +33,7 @@ func DoList[T record](crud foxyCrud) ([]T, error) {
 	return records, err
 }
 
-func DoGet[T record](crud foxyCrud, id string) (T, error) {
-	path := crud.GetRecordPath(id)
+func DoGet[T record](crud foxyCrud, path string) (T, error) {
 	body, err := crud.GetApiClient().get(path)
 	if err != nil {
 		empty := new(T)
@@ -55,8 +49,7 @@ func DoGet[T record](crud foxyCrud, id string) (T, error) {
 	return record, err
 }
 
-func DoAdd[T record](crud foxyCrud, record T) (string, error) {
-	path := crud.GetRecordAddPath()
+func DoAdd[T record](crud foxyCrud, record T, path string) (string, error) {
 	updateJson, _ := json.Marshal(record)
 	result, err := crud.GetApiClient().post(path, string(updateJson))
 	if err != nil {
@@ -67,18 +60,15 @@ func DoAdd[T record](crud foxyCrud, record T) (string, error) {
 	return id, err
 }
 
-func DoUpdate[T record](crud foxyCrud, id string, record T) (string, error) {
-	path := crud.GetRecordPath(id)
-	amendedCartTemplate := record
-	updateJson, _ := json.Marshal(amendedCartTemplate)
+func DoUpdate[T record](crud foxyCrud, record T, path string) (string, error) {
+	updateJson, _ := json.Marshal(record)
 	result, e := crud.GetApiClient().patch(path, string(updateJson))
 	selfUrl := gjson.GetBytes(result, "_links.self.href").String()
 	updatedId := extractId(selfUrl)
 	return updatedId, e
 }
 
-func DoDelete[T record](crud foxyCrud, id string) error {
-	path := crud.GetRecordPath(id)
+func DoDelete[T record](crud foxyCrud, path string) error {
 	_, e := crud.GetApiClient().delete(path)
 	return e
 }

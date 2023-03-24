@@ -5,6 +5,8 @@ var (
 	_ foxyCrud = &CartTemplatesApi{}
 )
 
+// ----
+
 type CartTemplatesApi struct {
 	apiClient FoxyClient
 }
@@ -13,45 +15,41 @@ func (foxy *CartTemplatesApi) GetApiClient() FoxyClient {
 	return foxy.apiClient
 }
 
-func (foxy *CartTemplatesApi) GetListPath() string {
-	return foxy.storePath() + "/cart_templates?limit=300"
-}
-
-func (foxy *CartTemplatesApi) GetRecordPath(id string) string {
-	return "/cart_templates/" + id
-}
-func (foxy *CartTemplatesApi) GetRecordAddPath() string {
-	return foxy.storePath() + "/cart_templates"
-}
-
 func (foxy *CartTemplatesApi) List() ([]CartTemplate, error) {
-	result, e := DoList[*CartTemplate](foxy)
+	path := foxy.storePath() + "/cart_templates?limit=300"
+	result, e := DoList[*CartTemplate](foxy, path)
 	return dereference(result), e
 }
 
 func (foxy *CartTemplatesApi) Get(id string) (CartTemplate, error) {
-	result, e := DoGet[*CartTemplate](foxy, id)
+	path := "/cart_templates/" + id
+	result, e := DoGet[*CartTemplate](foxy, path)
 	return *result, e
 }
 
 func (foxy *CartTemplatesApi) Add(cartTemplate CartTemplate) (string, error) {
-	result, e := DoAdd[*CartTemplate](foxy, &cartTemplate)
+	path := foxy.storePath() + "/cart_templates"
+	result, e := DoAdd[*CartTemplate](foxy, &cartTemplate, path)
 	return result, e
 }
 
 func (foxy *CartTemplatesApi) Update(id string, cartTemplate CartTemplate) (string, error) {
-	result, e := DoUpdate[*CartTemplate](foxy, id, &cartTemplate)
+	path := "/cart_templates/" + id
+	result, e := DoUpdate[*CartTemplate](foxy, &cartTemplate, path)
 	return result, e
 }
 
 func (foxy *CartTemplatesApi) Delete(id string) error {
-	return DoDelete[*CartTemplate](foxy, id)
+	path := "/cart_templates/" + id
+	return DoDelete[*CartTemplate](foxy, path)
 }
 
 func (foxy *CartTemplatesApi) storePath() string {
 	storeId, _ := foxy.apiClient.retrieveStoreId()
 	return "/stores/" + storeId
 }
+
+// ----
 
 type CartTemplate struct {
 	Id          string `json:"-"`
