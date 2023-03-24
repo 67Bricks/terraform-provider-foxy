@@ -33,6 +33,9 @@ are already present in the config.
   * Find the ID of the existing cart_template via the Foxy API
   * `terraform import foxy_cart_template.default [the id]`
   * Repeat for the various other template types
+* Managing store info - again, this requires an import of an existing store similar to the import needed for templates.
+
+See examples/webhooks/main.tf for an example Terraform file.
 
 ## MIT License
 
