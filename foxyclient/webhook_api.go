@@ -1,88 +1,57 @@
 package foxyclient
 
-import (
-	"encoding/json"
-	"github.com/tidwall/gjson"
+var (
+	_ record   = &Webhook{}
+	_ foxyCrud = &WebhooksApi{}
 )
+
+// ----
 
 type WebhooksApi struct {
 	apiClient FoxyClient
 }
 
-func (foxy *WebhooksApi) List() ([]Webhook, error) {
-	// This is not retrieving all webhooks - only the first 300 - but is it plausible to have more than 300 webhooks?
-	path := foxy.storePath() + "/webhooks?limit=300"
-	body, err := foxy.apiClient.get(path)
-	if err != nil {
-		return nil, err
-	}
-	var webhooks []Webhook
-	embeddedJsonResult := gjson.GetBytes(body, "_embedded.fx:webhooks")
-	embeddedJson := []byte(embeddedJsonResult.Raw)
-	err = json.Unmarshal(embeddedJson, &webhooks)
-	if err != nil {
-		return nil, err
-	}
-	for i := range webhooks {
-		// Need to modify webhooks[i], rather than accessing wh directly via the loop, because the latter is by value
-		webhooks[i].setIdFromSelfUrl()
-	}
+func (foxy *WebhooksApi) GetApiClient() FoxyClient {
+	return foxy.apiClient
+}
 
-	return webhooks, err
+func (foxy *WebhooksApi) List() ([]Webhook, error) {
+	path := foxy.storePath() + "/webhooks?limit=300"
+	result, e := DoList[*Webhook](foxy, path)
+	return dereference(result), e
 }
 
 func (foxy *WebhooksApi) Get(id string) (Webhook, error) {
-	path := foxy.webhookPath(id)
-	body, err := foxy.apiClient.get(path)
-	if err != nil {
-		return Webhook{}, err
-	}
-	var webhook Webhook
-	err = json.Unmarshal(body, &webhook)
-	if err != nil {
-		return Webhook{}, err
-	}
-	webhook.setIdFromSelfUrl()
-	return webhook, err
+	path := "/webhooks/" + id
+	result, e := DoGet[*Webhook](foxy, path)
+	return *result, e
 }
 
 func (foxy *WebhooksApi) Add(webhook Webhook) (string, error) {
 	path := foxy.storePath() + "/webhooks"
-	updateJson, _ := json.Marshal(webhook)
-	result, err := foxy.apiClient.post(path, string(updateJson))
-	if err != nil {
-		return "", err
-	}
-	selfUrl := gjson.GetBytes(result, "_links.self.href").String()
-	id := extractId(selfUrl)
-	return id, err
+	result, e := DoAdd[*Webhook](foxy, &webhook, path)
+	return result, e
 }
 
 func (foxy *WebhooksApi) Update(id string, webhook Webhook) (string, error) {
-	path := foxy.webhookPath(id)
+	path := "/webhooks/" + id
 	amendedWebhook := webhook
 	amendedWebhook.EventResource = "" // This cannot be updated, it can only be set on creation
-	updateJson, _ := json.Marshal(amendedWebhook)
-	result, e := foxy.apiClient.patch(path, string(updateJson))
-	selfUrl := gjson.GetBytes(result, "_links.self.href").String()
-	updatedId := extractId(selfUrl)
-	return updatedId, e
+	result, e := DoUpdate[*Webhook](foxy, &amendedWebhook, path)
+	return result, e
 }
 
 func (foxy *WebhooksApi) Delete(id string) error {
-	path := foxy.webhookPath(id)
-	_, e := foxy.apiClient.delete(path)
-	return e
-}
-
-func (foxy *WebhooksApi) webhookPath(id string) string {
-	return "/webhooks/" + id
+	path := "/webhooks/" + id
+	return DoDelete[*Webhook](foxy, path)
 }
 
 func (foxy *WebhooksApi) storePath() string {
 	storeId, _ := foxy.apiClient.retrieveStoreId()
 	return "/stores/" + storeId
 }
+
+// ----
 
 type Webhook struct {
 	Id            string `json:"-"`

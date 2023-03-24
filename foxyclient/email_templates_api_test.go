@@ -9,7 +9,7 @@ func TestRetrieveEmailTemplates(t *testing.T) {
 	foxy := newFoxy()
 	emailTemplates, _ := foxy.EmailTemplates.List()
 	require.Equal(t, "Email Receipt Template", emailTemplates[0].Description)
-	require.Equal(t, "", emailTemplates[0].ContentHtml)
+	require.Equal(t, "<p>New email template</p>", emailTemplates[0].ContentHtml)
 	require.Equal(t, "", emailTemplates[0].ContentHtmlUrl)
 	require.NotEmpty(t, emailTemplates[0].Id)
 }
